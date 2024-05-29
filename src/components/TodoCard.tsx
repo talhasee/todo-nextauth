@@ -53,6 +53,7 @@ const TodoCard = ({todo, onTodoDelete, onTodoUpdate}: TodoCardProps) => {
 
 
     const handleDeleteConfirm = async () => {
+        onTodoDelete(todo._id.toString());
         try {
             
             const response = await axios.delete<apiResponse>(`/api/delete-todo/${todo._id.toString()}`)
@@ -61,7 +62,6 @@ const TodoCard = ({todo, onTodoDelete, onTodoUpdate}: TodoCardProps) => {
                 title: response.data.message
             });
 
-            onTodoDelete(todo._id.toString());
         }catch(error){
             console.error(`Error in deleting Todo - ${error}`);
         }
@@ -72,6 +72,7 @@ const TodoCard = ({todo, onTodoDelete, onTodoUpdate}: TodoCardProps) => {
 
     const onSubmit = async(data: z.infer<typeof todoSchema> ) => {
         setIsLoading(true);
+        onTodoUpdate(todo._id.toString(), todoContent);
 
         try {
             const response = await axios.patch<apiResponse>(`/api/update-todo/${todo._id.toString()}`,{
@@ -82,7 +83,6 @@ const TodoCard = ({todo, onTodoDelete, onTodoUpdate}: TodoCardProps) => {
             });
             form.reset({...form.getValues(), content: ''});
 
-            onTodoUpdate(todo._id.toString(), todoContent);
         } catch (error) {
             console.error(`Error in updating Todo - ${error}`);
         }
